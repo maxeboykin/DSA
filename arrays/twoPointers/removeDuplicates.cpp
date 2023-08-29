@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-
+#include <string>
 /*
  * Given an array of sorted numbers, remove all duplicate number instances
  * from it in-place, such that each element appears only once.
@@ -14,21 +14,31 @@ using namespace std;
 class RemoveDuplicates {
 public:
     static int remove(vector<int> &arr) {
-
+        int right = 0;
+        int left = 0;
+        while(right < arr.size()) {
+            if (arr[left] == arr[right]) {
+                right++;
+            } else { // case when arr[left] != arr[right]
+                left++;
+                arr[left] = arr[right];
+            }
+        }
+        return left + 1;
     }
 };
 
 int main(){
     RemoveDuplicates solution;
-    vector<int> foo{2, 3, 3, 3, 6, 9, 9};
+    vector<int> foo = {2, 3, 3, 3, 6, 9, 9};
     int expectedResult = 4;
-    vector<int> bar{2, 2, 2, 11};
+    vector<int> bar = {2, 2, 2, 11};
     int expectedResultTwo = 2;
     int resultOne = solution.remove(foo);
     int resultTwo = solution.remove(bar);
     cout << "remove duplicates in place: ";
-    cout << "Expected result" << expectedResult << " actual: " << resultOne;
+    cout << "Expected result: " << expectedResult << " actual: " << resultOne;
     cout << endl;
-    cout << "Expected result" << expectedResultTwo << " actual: " << resultTwo;
+    cout << "Expected result: " << expectedResultTwo << " actual: " << resultTwo;
     cout << endl;
 }
