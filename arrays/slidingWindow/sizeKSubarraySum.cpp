@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
-#include <string>
 #include <algorithm>
+#include <limits>
 /*
  * Given an array of positive integers and a number ‘S,’ find the length of the
  * smallest contiguous subarray whose sum is greater than or equal to 'S'.
@@ -12,31 +12,20 @@ using namespace std;
 class SmallestSubarrayWithGreaterSum {
 public:
     static int findMinSubArray(int S, const vector<int> &arr) {
-        int minWindowSize = -1;
-        int curWindowSum = arr[0];
+        int minWindowSize = numeric_limits<int>::max();
+        int curWindowSum = 0;
         int left = 0;
-        int right = 0;
-
-        // initialize first window
-        while(right < arr.size() && curWindowSum < S){
-            right ++;
-            curWindowSum += arr[right];
-        }
         // set first minWindowSize
-        minWindowSize = right - left + 1;
-        while(right < arr.size()){
+        for(int right = 0;right < arr.size(); right++){
+            curWindowSum += arr[right];
             while(left <= right && curWindowSum >= S){
-                if(left == right) return 1;
+                if(left == right) return 1; // edge case of one element >= S. automatically return 1 since that is the smallest
                 minWindowSize = min(minWindowSize, right - left + 1);
                 left++;
                 curWindowSum -= arr[left - 1];
             }
-            while(right < arr.size() && curWindowSum < S){
-                right++;
-                curWindowSum += arr[right];
-            }
         }
-        return minWindowSize;
+        return minWindowSize == numeric_limits<int>::max() ? 0 : minWindowSize;
     }
 };
 
