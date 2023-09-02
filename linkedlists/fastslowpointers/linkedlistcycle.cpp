@@ -17,13 +17,14 @@ public:
         ListNode *slow = head;
         ListNode *fast = head;
         bool firstIteration = true;
-//        while(slow != nullptr && fast != nullptr){ i made this mistake and got a segmentation fault
+        // while(slow != nullptr && fast != nullptr){
+        // i made this mistake and got a segmentation fault
         // remember to check it fast->next is not null too
         while(fast != nullptr && fast->next != nullptr){
-        if(slow == fast && !firstIteration) return true;
-        firstIteration = false;
-        slow = slow->next;
-        fast = fast->next->next; // this will throw if fast->next is not evaluated above
+            if(slow == fast && !firstIteration) return true;
+            firstIteration = false;
+            slow = slow->next;
+            fast = fast->next->next; // this will throw if fast->next is not evaluated above
         }
         return false;
     }
@@ -32,7 +33,6 @@ public:
 // figure out how to test
 int main(){
     LinkedListCycle solution;
-
 }
 
 
