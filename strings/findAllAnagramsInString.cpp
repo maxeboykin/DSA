@@ -4,6 +4,9 @@
 #include <string>
 #include <ctime>
 
+// TO-DO: FIND A MORE TIME EFFICIENT ANSWER. ONLY BEAT 30% IN TIME AND SPACE
+// https://leetcode.com/problems/find-all-anagrams-in-a-string/description/
+// https://leetcode.com/problems/find-all-anagrams-in-a-string/solutions/1305008/simple-c-solution-sliding-window-with-explanation/
 bool calculateTime(std::string arg, bool (*func)(std::string));
 
 class FindAllAnagramsInString {
@@ -41,12 +44,12 @@ public:
         start = clock();
         std::vector<int> result = findAnagrams(s, p);
         end = clock();
-        printf("LongestRepeatingCharReplacement: it took %d clicks (%f seconds).\n", end-start, ((float)(end-start))/CLOCKS_PER_SEC);
+        printf("FindAllAnagramsInString: it took %d clicks (%f seconds).\n", end-start, ((float)(end-start))/CLOCKS_PER_SEC);
         return result;
     }
     void printExpectations(std::vector<int> expected, std::vector<int> actual, std::vector<int> expected2,
                            std::vector<int> actual2){
-        std::cout << "LongestRepeatingCharReplacement: ";
+        std::cout << "FindAllAnagramsInString: ";
         std::cout << std::endl;
         int idx = 0;
         for(const auto& value: actual){

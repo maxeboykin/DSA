@@ -6,7 +6,7 @@
 #include <cctype>
 
 bool calculateTime(std::string arg, bool (*func)(std::string));
-
+// TO-DO: try to do with an array instead hash in another method, compare time
 class ValidAnagram {
 public:
     bool isPalindrome(std::string s) {
