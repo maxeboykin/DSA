@@ -2,11 +2,6 @@
 #include <vector>
 #include <queue>
 
-/*
- * TODO: learn Cpp Queues since they should be used here
- * could not code out so really study this and subsets
- */
-
 class Permutations {
 public:
     std::vector<std::vector<int>> findPermutations(std::vector<int>& nums) {
