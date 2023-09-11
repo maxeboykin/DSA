@@ -17,8 +17,17 @@ public:
         }
         return subsets;
     }
+    std::vector<std::vector<int>> calculateTime(std::vector<int>& nums){
+        clock_t start;
+        clock_t end;
+        start = clock();
+        std::vector<std::vector<int>> result = findSubsets(nums);
+        end = clock();
+        printf("Subsets: it took %d clicks (%f seconds).\n", end-start, ((float)(end-start))/CLOCKS_PER_SEC);
+        return result;
+    }
     void printExpectations(std::vector<std::vector<int>> expected, std::vector<std::vector<int>> actual){
-        std::cout << "Group Anagrams: ";
+        std::cout << "Subsets: ";
         std::cout << "Expected: " << std::endl;
         printNestedArray(expected);
         std::cout << "Actual: " << std::endl;
@@ -39,7 +48,11 @@ public:
 int main(){
     Subsets solution;
     std::vector<int> foo = {1, 3};
-    std::vector<std::vector<int>> result1 = solution.findSubsets(foo);
+    std::vector<std::vector<int>> result1 = solution.calculateTime(foo);
     std::vector<std::vector<int>> expectation1 = {{}, {1}, {5}, {3}, {1,5}, {1,3}, {5,3}, {1,5,3}};
     solution.printExpectations(expectation1, result1);
+    std::vector<int> bar = {1, 3, 5, 7, 9};
+    solution.calculateTime(bar); // 38 clicks
+    std::vector<int> zoo = {1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27};
+    solution.calculateTime(zoo); // 22346 clicks!
 }
