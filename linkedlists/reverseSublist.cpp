@@ -68,31 +68,53 @@ public:
 
 };
 
-class ReverseLinkedList {
+class ReverseSublist {
 public:
-    ListNode *reverse(ListNode *head) {
-        ListNode *current = head;
-        ListNode *prev = nullptr;
-        ListNode *next = nullptr;
-        while(current != nullptr){
-            next = current->next; // need to hold onto next before changing current->next
-            current->next = prev; // main part of the loop
-            prev = current;       // move everything up
-            current = next;       // move everything up current is last since its while case
+    ListNode *reverseSublist(ListNode *head, int p, int q) {
+        if(p == q) return head;
+        ListNode* current = head;
+        ListNode* prev = nullptr;
+        ListNode* next = nullptr;
+        int i = 1;
+        for(; current != nullptr && i < p; i++){
+            prev = current;
+            current = current->next;
         }
-        return prev;
+        ListNode* pNode = current;      // lastNodeOfSublist
+        ListNode* pMinusOneNode = prev; // lastNodeOfFirstPart
+        /*
+        // need to move current and prev up one to start reversal since we dont want to reverse one too early
+        // it actually doesn't matter since it gets clobbered when we change p and q at the end
+          prev = prev->next;
+          current = current->next;
+          i++;
+        */
+        for(;current != nullptr && i <= q; i++){
+            next = current->next;
+            current->next = prev;
+            prev = current;
+            current = next;
+        }
+        // current is q+1 and previous is q
+        if(pMinusOneNode != nullptr){
+            pMinusOneNode->next = prev;
+        } else {
+            head = prev;
+        }
+        pNode->next = current;
+        return head;
     }
-    ListNode* calculateTime(ListNode *head){
+    ListNode* calculateTime(ListNode *head, int p, int q){
         clock_t start;
         clock_t end;
         start = clock();
-        ListNode* result = reverse(head);
+        ListNode* result = reverseSublist(head, p, q);
         end = clock();
-        printf("Reverse Linked List: it took %d clicks (%f seconds).\n", end-start, ((float)(end-start))/CLOCKS_PER_SEC);
+        printf("Reverse SubList Linked List: it took %d clicks (%f seconds).\n", end-start, ((float)(end-start))/CLOCKS_PER_SEC);
         return result;
     }
     void printExpectations(ListNode* expected, ListNode* actual){
-        std::cout << "Reverse Linked List: ";
+        std::cout << "Reverse Sublist Linked List: ";
         std::cout << "Expected: " << std::endl;
         printLinkedList(expected);
         std::cout << "Actual: " << std::endl;
@@ -110,7 +132,7 @@ public:
 
 
 int main(){
-    ReverseLinkedList solution;
+    ReverseSublist solution;
     LinkedList* foo = new LinkedList();
     foo->insertAtBeginning(1);
     foo->insertAtEnd(2);
@@ -118,11 +140,13 @@ int main(){
     foo->insertAtEnd(4);
     foo->insertAtEnd(5);
     LinkedList* expected = new LinkedList();
-    expected->insertAtBeginning(5);
+    expected->insertAtBeginning(1);
     expected->insertAtEnd(4);
     expected->insertAtEnd(3);
     expected->insertAtEnd(2);
-    expected->insertAtEnd(1);
-    ListNode *result = solution.reverse(foo->head);
+    expected->insertAtEnd(5);
+    int p = 2;
+    int q = 4;
+    ListNode *result = solution.reverseSublist(foo->head, p, q);
     solution.printExpectations(expected->head, result);
 }
