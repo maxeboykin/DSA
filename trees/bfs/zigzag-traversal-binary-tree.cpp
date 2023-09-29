@@ -18,8 +18,8 @@ public:
 // deque methods include push_front, push_back
 class ZigzagTraversal {
 public:
-    std::vector<std::deque<int>> traverse(TreeNode *root) {
-        std::vector<std::deque<int>> results;
+    std::vector<std::vector<int>> traverse(TreeNode *root) {
+        std::vector<std::vector<int>> results;
         if(root == nullptr) {
             return results;
         }
@@ -28,12 +28,15 @@ public:
         bool reverse = false;
         while(!queue.empty()){
             int curLevelSize = queue.size();
-            std::deque<int> curLevelValues;
+            //std::deque<int> curLevelValues;
+            std::vector<int> curLevelValues(curLevelSize);
             for(int i = 0; i < curLevelSize; i++) {
                 TreeNode *curNode = queue.front();
                 queue.pop();
-                if(reverse) curLevelValues.push_front(curNode->val);
-                if(!reverse) curLevelValues.push_back(curNode->val);
+                if(reverse) curLevelValues[curLevelSize-1-i] = curNode->val;
+                if(!reverse) curLevelValues[i] = curNode->val;
+//                if(reverse) curLevelValues.push_front(curNode->val);
+//                if(!reverse) curLevelValues.push_back(curNode->val);
                 if(curNode->left != nullptr) queue.push(curNode->left);
                 if(curNode->right != nullptr) queue.push(curNode->right);
             }
@@ -42,23 +45,23 @@ public:
         }
         return results;
     }
-    std::vector<std::deque<int>> calculateTime(TreeNode *root){
+    std::vector<std::vector<int>> calculateTime(TreeNode *root){
         clock_t start;
         clock_t end;
         start = clock();
-        std::vector<std::deque<int>> result = traverse(root);
+        std::vector<std::vector<int>> result = traverse(root);
         end = clock();
         printf("Binary Tree Level Order ZigZag Traversal: it took %d clicks (%f seconds).\n", end-start, ((float)(end-start))/CLOCKS_PER_SEC);
         return result;
     }
-    void printExpectations(std::vector<std::deque<int>> expected, std::vector<std::deque<int>> actual){
+    void printExpectations(std::vector<std::vector<int>> expected, std::vector<std::vector<int>> actual){
         std::cout << "Binary Tree Level Order Zigzag Traversal: ";
         std::cout << "Expected: " << std::endl;
         printNestedVector(expected);
         std::cout << "Actual: " << std::endl;
         printNestedVector(actual);
     }
-    void printNestedVector(std::vector<std::deque<int>> arr){
+    void printNestedVector(std::vector<std::vector<int>> arr){
         for(auto& outerArr: arr){
             std::cout << "[";
             for(auto& val: outerArr){
@@ -79,8 +82,8 @@ int main(){
     root->right->left = new TreeNode(10);
     root->right->right = new TreeNode(5);
     ZigzagTraversal solution;
-    std::vector<std::deque<int>> actual = solution.calculateTime(root);
-    std::vector<std::deque<int>> expected = {{12},{1,7},{9,10,5}};
+    std::vector<std::vector<int>> actual = solution.calculateTime(root);
+    std::vector<std::vector<int>> expected = {{12},{1,7},{9,10,5}};
     solution.printExpectations(expected, actual);
 
     root = new TreeNode(12);
@@ -91,7 +94,7 @@ int main(){
     root->right->right = new TreeNode(5);
     root->right->left->left = new TreeNode(20);
     root->right->left->right = new TreeNode(17);
-    std::vector<std::deque<int>> actual2 = solution.calculateTime(root);
-    std::vector<std::deque<int>> expected2 = {{12},{1,7},{9,10,5}, {17,20}};
+    std::vector<std::vector<int>> actual2 = solution.calculateTime(root);
+    std::vector<std::vector<int>> expected2 = {{12},{1,7},{9,10,5}, {17,20}};
     solution.printExpectations(expected2, actual2);
 }
