@@ -17,52 +17,35 @@ public:
 // queue methods include empty, size, front, back, push, pop
 class TreePathSum{
 public:
-    static bool hasPathIterative(TreeNode *root, int sum) {
-        if(root == nullptr) {
+    static bool findPath(TreeNode *root, const std::vector<int>sequence) {
+        int inputSize = sequence.size();
+        return findPathRecursively(root, sequence, inputSize, 1);
+    }
+    static bool findPathRecursively(TreeNode *curNode, const std::vector<int> &sequence, int inputSize, int levelSize){
+        if(curNode == nullptr){
             return false;
         }
-        int curSum = 0;
-        std::stack<TreeNode*> stack = {};
-        stack.push(root);
-        curSum += root->val;
-        while(!stack.empty()){
-            TreeNode* current = stack.top();
-            while(current->left != nullptr || current->right != nullptr) {
-                if(current->left != nullptr) {
-                    stack.push(current->left);
-                    current = current->left;
-                    curSum += current->val;
-                } else {
-                    stack.push(current->right);
-                    current = current->right;
-                    curSum += current->val;
-                }
+        if(curNode->left == nullptr && curNode->right == nullptr) {
+            if(sequence[levelSize-1] == curNode->val){
+                return true;
+            } else {
+                return false;
             }
-            if(curSum == sum) return true;
-            current = stack.top();
-            stack.pop();
-            curSum -= current->val;
         }
-        return false;
-    }
-    static bool hasPath(TreeNode *root, int sum) {
-        if(root == nullptr) {
+        if(sequence[levelSize-1] != curNode->val){
             return false;
         }
-        // base case
-        if(root->left == nullptr && root->right == nullptr){
-            if(root->val == sum) return true;
-        }
-        // recursive case
-        return hasPath(root->left, sum - root->val) || hasPath(root->right, sum - root->val);
+        return findPathRecursively(curNode->left, sequence, inputSize, levelSize+1) ||
+                findPathRecursively(curNode->right, sequence, inputSize, levelSize+1);
     }
-    bool calculateTime(TreeNode *root, int sum){
+
+    bool calculateTime(TreeNode *root, const std::vector<int>&sequence){
         clock_t start;
         clock_t end;
         start = clock();
-        bool result = hasPath(root, sum);
+        bool result = findPath(root, sequence);
         end = clock();
-        printf("Has Path Sum: it took %d clicks (%f seconds).\n", end-start, ((float)(end-start))/CLOCKS_PER_SEC);
+        printf("Path with Given Sequence: it took %d clicks (%f seconds).\n", end-start, ((float)(end-start))/CLOCKS_PER_SEC);
         return result;
     }
     void printExpectations(int expected, int actual){
@@ -73,19 +56,30 @@ public:
 };
 
 int main(){
-    TreeNode *root = new TreeNode(12);
+    TreeNode *root = new TreeNode(1);
     root->left = new TreeNode(7);
-    root->right = new TreeNode(1);
-    root->left->left = new TreeNode(9);
-    root->right->left = new TreeNode(10);
-    root->right->right = new TreeNode(5);
+    root->right = new TreeNode(9);
+    root->right->left = new TreeNode(2);
+    root->right->right = new TreeNode(9);
     TreePathSum solution;
-    bool actual = solution.calculateTime(root, 23);
+    const std::vector<int>sequence1 = {1,9,9};
+    bool actual = solution.calculateTime(root, sequence1);
     bool expected = true;
     solution.printExpectations(expected, actual);
-    bool actual2 = solution.calculateTime(root, 16);
+    root = new TreeNode(1);
+    root->left = new TreeNode(0);
+    root->right = new TreeNode(1);
+    root->left->left = new TreeNode(1);
+    root->right->left = new TreeNode(6);
+    root->right->right = new TreeNode(5);
+    const std::vector<int>sequence2 = {1,0,7};
+    const std::vector<int>sequence3 = {1,1,6};
+    bool actual2 = solution.calculateTime(root, sequence2);
     bool expected2 = false;
     solution.printExpectations(expected2, actual2);
+    bool actual3 = solution.calculateTime(root, sequence3);
+    bool expected3 = true;
+    solution.printExpectations(expected3, actual3);
 }
 
 //The space complexity of the above algorithm will be O(N) in the worst case. This space will be used to store the recursion stack. The worst case will happen when the given tree is a linked list (i.e., every node has only one child).
